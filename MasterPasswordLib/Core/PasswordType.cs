@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MasterPassword.Core
+﻿namespace MasterPassword.Core
 {
     public enum PasswordType
     {
@@ -12,4 +10,3 @@ namespace MasterPassword.Core
         PIN
     }
 }
-

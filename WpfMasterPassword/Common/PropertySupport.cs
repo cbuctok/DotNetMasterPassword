@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WpfMasterPassword.Common
 {
@@ -28,7 +24,9 @@ namespace WpfMasterPassword.Common
         public static string ExtractPropertyName<T>(Expression<Func<T>> propertyExpression)
         {
             if (propertyExpression == null)
+            {
                 throw new ArgumentNullException("propertyExpression");
+            }
 
             return ExtractPropertyNameFromLambda(propertyExpression);
         }
@@ -46,22 +44,29 @@ namespace WpfMasterPassword.Common
         internal static string ExtractPropertyNameFromLambda(LambdaExpression expression)
         {
             if (expression == null)
+            {
                 throw new ArgumentNullException("expression");
+            }
 
             var memberExpression = expression.Body as MemberExpression;
             if (memberExpression == null)
+            {
                 throw new ArgumentException("NotMemberAccessExpression");
+            }
 
             var property = memberExpression.Member as PropertyInfo;
             if (property == null)
+            {
                 throw new ArgumentException("ExpressionNotProperty_Exception");
+            }
 
             var getMethod = property.GetMethod;
             if (getMethod.IsStatic)
+            {
                 throw new ArgumentException("StaticExpression_Exception");
+            }
 
             return memberExpression.Member.Name;
         }
-
     }
 }

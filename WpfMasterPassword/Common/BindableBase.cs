@@ -31,7 +31,10 @@ namespace WpfMasterPassword.Common
         /// desired value.</returns>
         protected virtual bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
-            if (object.Equals(storage, value)) return false;
+            if (object.Equals(storage, value))
+            {
+                return false;
+            }
 
             storage = value;
             this.OnPropertyChanged(propertyName);

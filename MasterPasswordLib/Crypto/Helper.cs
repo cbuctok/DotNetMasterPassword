@@ -17,88 +17,89 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#endregion
+#endregion License
 
 namespace MasterPassword.Crypto
 {
-	using System;
+    using System;
 
-	internal static class Helper
-	{
-		public static void CheckBounds<T>(string valueName, T[] value, int offset, int count)
-		{
-			CheckNull(valueName, value);
-			if (offset < 0 || count < 0 || count > value.Length - offset)
-			{
-				throw new ArgumentOutOfRangeException();
-			}
-		}
+    internal static class Helper
+    {
+        public static void CheckBounds<T>(string valueName, T[] value, int offset, int count)
+        {
+            CheckNull(valueName, value);
+            if (offset < 0 || count < 0 || count > value.Length - offset)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+        }
 
-		public static void CheckNull<T>(string valueName, T value) where T : class
-		{
-			if (value == null)
-			{
-				if (valueName == null)
-					throw new ArgumentNullException("valueName");
-				throw new ArgumentNullException(valueName);
-			}
-		}
+        public static void CheckNull<T>(string valueName, T value) where T : class
+        {
+            if (value == null)
+            {
+                if (valueName == null)
+                {
+                    throw new ArgumentNullException("valueName");
+                }
 
-		public static void CheckRange(string valueName, int value, int minimum, int maximum)
-		{
-			if (value < minimum || value > maximum)
-			{
-				throw new ArgumentOutOfRangeException(valueName,
-				                                      string.Format("Value must be in the range [{0}, {1}].",
-				              minimum, maximum));
-			}
-		}
+                throw new ArgumentNullException(valueName);
+            }
+        }
 
-		public static void CheckRange<T>(string valueName, T[] value, int minimum, int maximum)
-		{
-			CheckNull(valueName, value);
-			if (value.Length < minimum || value.Length > maximum)
-			{
-				throw new ArgumentOutOfRangeException(valueName,
-				                                      string.Format("Length must be in the range [{0}, {1}].",
-				              minimum, maximum));
-			}
-		}
+        public static void CheckRange(string valueName, int value, int minimum, int maximum)
+        {
+            if (value < minimum || value > maximum)
+            {
+                throw new ArgumentOutOfRangeException(valueName,
+                                                      string.Format("Value must be in the range [{0}, {1}].",
+                              minimum, maximum));
+            }
+        }
 
-		public static uint BytesToUInt32(byte[] bytes, int offset)
-		{
-			return
-				(uint) bytes[offset + 0] << 24 |
-					(uint) bytes[offset + 1] << 16 |
-					(uint) bytes[offset + 2] << 8 |
-					bytes[offset + 3];
-		}
+        public static void CheckRange<T>(string valueName, T[] value, int minimum, int maximum)
+        {
+            CheckNull(valueName, value);
+            if (value.Length < minimum || value.Length > maximum)
+            {
+                throw new ArgumentOutOfRangeException(valueName,
+                                                      string.Format("Length must be in the range [{0}, {1}].",
+                              minimum, maximum));
+            }
+        }
 
-		public static uint BytesToUInt32LE(byte[] bytes, int offset)
-		{
-			return
-				(uint) bytes[offset + 3] << 24 |
-					(uint) bytes[offset + 2] << 16 |
-					(uint) bytes[offset + 1] << 8 |
-					bytes[offset + 0];
-		}
+        public static uint BytesToUInt32(byte[] bytes, int offset)
+        {
+            return
+                (uint)bytes[offset + 0] << 24 |
+                    (uint)bytes[offset + 1] << 16 |
+                    (uint)bytes[offset + 2] << 8 |
+                    bytes[offset + 3];
+        }
 
-		public static void UInt32ToBytes(uint value, byte[] bytes, int offset)
-		{
-			bytes[offset + 0] = (byte) (value >> 24);
-			bytes[offset + 1] = (byte) (value >> 16);
-			bytes[offset + 2] = (byte) (value >> 8);
-			bytes[offset + 3] = (byte) (value);
-		}
+        public static uint BytesToUInt32LE(byte[] bytes, int offset)
+        {
+            return
+                (uint)bytes[offset + 3] << 24 |
+                    (uint)bytes[offset + 2] << 16 |
+                    (uint)bytes[offset + 1] << 8 |
+                    bytes[offset + 0];
+        }
 
-		public static void UInt32ToBytesLE(uint value, byte[] bytes, int offset)
-		{
-			bytes[offset + 3] = (byte) (value >> 24);
-			bytes[offset + 2] = (byte) (value >> 16);
-			bytes[offset + 1] = (byte) (value >> 8);
-			bytes[offset + 0] = (byte) (value);
-		}
-	}
+        public static void UInt32ToBytes(uint value, byte[] bytes, int offset)
+        {
+            bytes[offset + 0] = (byte)(value >> 24);
+            bytes[offset + 1] = (byte)(value >> 16);
+            bytes[offset + 2] = (byte)(value >> 8);
+            bytes[offset + 3] = (byte)(value);
+        }
 
+        public static void UInt32ToBytesLE(uint value, byte[] bytes, int offset)
+        {
+            bytes[offset + 3] = (byte)(value >> 24);
+            bytes[offset + 2] = (byte)(value >> 16);
+            bytes[offset + 1] = (byte)(value >> 8);
+            bytes[offset + 0] = (byte)(value);
+        }
+    }
 }
-

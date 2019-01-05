@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using MasterPassword.Core;
+using System.Collections.Generic;
 using System.IO;
-using MasterPassword.Core;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace MasterPassword.Model
 {
@@ -14,7 +14,7 @@ namespace MasterPassword.Model
         /// <summary>
         /// Name of the user, is used to generate the passwords for the sites
         /// </summary>
-        public string UserName { get; set;} 
+        public string UserName { get; set; }
 
         /// <summary>
         /// List of sites to generate passwords for
@@ -48,7 +48,7 @@ namespace MasterPassword.Model
                 var typeElement = node.Element("Type");
 
                 if (null != typeElement)
-                {   
+                {
                     pwType = SerializePasswordTypeType.First(row => row.Value == typeElement.Value).Key;
                 }
 
@@ -69,7 +69,7 @@ namespace MasterPassword.Model
         public void Save(Stream s)
         {
             XDocument doc = new XDocument(new XElement("MasterPassword"));
-                         
+
             doc.Root.Add(new XElement("UserName", UserName));
 
             var sitesNode = new XElement("Sites");
@@ -100,7 +100,7 @@ namespace MasterPassword.Model
         /// <summary>
         /// Helper structure for XML serialization: strings to use for the password types.
         /// </summary>
-        public static Dictionary<PasswordType, string> SerializePasswordTypeType = new Dictionary<PasswordType, string> 
+        public static Dictionary<PasswordType, string> SerializePasswordTypeType = new Dictionary<PasswordType, string>
         {
             { PasswordType.MaximumSecurityPassword, "MaximumSecurityPassword" },
             { PasswordType.LongPassword, "LongPassword" },
@@ -110,7 +110,4 @@ namespace MasterPassword.Model
             { PasswordType.PIN, "PIN" }
         };
     }
-
-
 }
-

@@ -3,15 +3,13 @@ using System.ComponentModel;
 
 namespace WpfMasterPassword.Common
 {
-    public class PropertyModel<T>: BindableBase
+    public class PropertyModel<T> : BindableBase
     {
         private T _Value;
+
         public T Value
         {
-            get
-            {
-                return _Value;
-            }
+            get => _Value;
             set
             {
                 _Value = value;
@@ -32,13 +30,7 @@ namespace WpfMasterPassword.Common
     public class PropertyReadonlyModel<T> : BindableBase
     {
         private T _Value;
-        public T Value
-        {
-            get
-            {
-                return _Value;
-            }
-        }
+        public T Value => _Value;
 
         public PropertyReadonlyModel()
         {
@@ -60,12 +52,10 @@ namespace WpfMasterPassword.Common
     {
         private Func<T> GetValue;
         private Action<T> SetValue;
+
         public T Value
         {
-            get
-            {
-                return GetValue();
-            }
+            get => GetValue();
             set
             {
                 SetValue(value);
@@ -75,8 +65,16 @@ namespace WpfMasterPassword.Common
 
         public PropertyDelegateModel(Func<T> getValue, Action<T> setValue)
         {
-            if (null == getValue) throw new ArgumentException("getValue");
-            if (null == setValue) throw new ArgumentException("setValue");
+            if (null == getValue)
+            {
+                throw new ArgumentException("getValue");
+            }
+
+            if (null == setValue)
+            {
+                throw new ArgumentException("setValue");
+            }
+
             GetValue = getValue;
             SetValue = setValue;
         }
@@ -90,13 +88,7 @@ namespace WpfMasterPassword.Common
     public class PropertyDelegateReadonlyModel<T> : BindableBase
     {
         private Func<T> GetValue;
-        public T Value
-        {
-            get
-            {
-                return GetValue();
-            }
-        }
+        public T Value => GetValue();
 
         public PropertyDelegateReadonlyModel(Func<T> getValue)
         {

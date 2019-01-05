@@ -1,9 +1,6 @@
 ﻿using MasterPassword.Core;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WpfMasterPassword.Common;
 
 namespace WpfMasterPassword.ViewModel
@@ -19,7 +16,7 @@ namespace WpfMasterPassword.ViewModel
 
         private static Tuple<PasswordType, string>[] ThePasswordTypes = Enum.GetValues(typeof(PasswordType)).Cast<PasswordType>().Select(v => Tuple.Create(v, v.ToString())).ToArray();
 
-        public Tuple<PasswordType, string>[] PasswordTypes { get { return ThePasswordTypes; } }
+        public Tuple<PasswordType, string>[] PasswordTypes => ThePasswordTypes;
 
         public ConfigurationSiteViewModel()
         {

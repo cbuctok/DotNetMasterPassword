@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MasterPassword.Model
 {
@@ -64,12 +62,14 @@ namespace MasterPassword.Model
                 /// Use First
                 /// </summary>
                 FirstNew,
+
                 FirstNewer,
 
                 /// <summary>
                 /// Use Second
                 /// </summary>
                 SecondNew,
+
                 SecondNewer,
 
                 /// <summary>
@@ -86,7 +86,10 @@ namespace MasterPassword.Model
             /// <param name="which">recommended resolution</param>
             public MergedEntry(SiteEntry first, SiteEntry second, Resolution which)
             {
-                if (first == null && second == null) throw new ArgumentException("both are not allowed to be null");
+                if (first == null && second == null)
+                {
+                    throw new ArgumentException("both are not allowed to be null");
+                }
 
                 First = first;
                 Second = second;
@@ -149,7 +152,7 @@ namespace MasterPassword.Model
                     }
                     else if (first.Type == second.Type && first.Counter < second.Counter)
                     {
-                        result.SitesMerged.Add(new MergedEntry(first, second, MergedEntry.Resolution.SecondNewer));       
+                        result.SitesMerged.Add(new MergedEntry(first, second, MergedEntry.Resolution.SecondNewer));
                     }
                     else
                     {   // same counter - conflict. try our best.

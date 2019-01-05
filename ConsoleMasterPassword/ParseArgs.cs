@@ -40,18 +40,11 @@
         /// <summary>
         /// specifies if we have valid current argument
         /// </summary>
-        public bool IsValid
-        {
-            get { return CurrentIndex < Args.Length;  }
-        }
+        public bool IsValid => CurrentIndex < Args.Length;
 
         /// <summary>
         /// gets the current argument.
         /// </summary>
-        public string CurrentArg
-        {
-            get { return Args[CurrentIndex]; }
-        }
-
+        public string CurrentArg => Args[CurrentIndex];
     }
 }

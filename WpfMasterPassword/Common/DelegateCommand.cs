@@ -23,7 +23,7 @@ namespace WpfMasterPassword.Common
     /// {
     ///     this.submitCommand = new DelegateCommand&lt;int?&gt;(this.Submit, this.CanSubmit);
     /// }
-    /// 
+    ///
     /// private bool CanSubmit(int? customerId)
     /// {
     ///     return (customerId.HasValue &amp;&amp; customers.Contains(customerId.Value));
@@ -53,11 +53,13 @@ namespace WpfMasterPassword.Common
             : base((o) => executeMethod((T)o), (o) => canExecuteMethod((T)o))
         {
             if (executeMethod == null || canExecuteMethod == null)
+            {
                 throw new ArgumentNullException("executeMethod");
+            }
 
             TypeInfo genericTypeInfo = typeof(T).GetTypeInfo();
 
-            // DelegateCommand allows object or Nullable<>.  
+            // DelegateCommand allows object or Nullable<>.
             // note: Nullable<> is a struct so we cannot use a class constraint.
             if (genericTypeInfo.IsValueType)
             {
@@ -133,7 +135,6 @@ namespace WpfMasterPassword.Common
             await base.Execute(parameter);
         }
 
-
         private DelegateCommand(Func<T, Task> executeMethod)
             : this(executeMethod, (o) => true)
         {
@@ -143,9 +144,10 @@ namespace WpfMasterPassword.Common
             : base((o) => executeMethod((T)o), (o) => canExecuteMethod((T)o))
         {
             if (executeMethod == null || canExecuteMethod == null)
+            {
                 throw new ArgumentNullException("executeMethod");
+            }
         }
-
     }
 
     /// <summary>
@@ -174,7 +176,9 @@ namespace WpfMasterPassword.Common
             : base((o) => executeMethod(), (o) => canExecuteMethod())
         {
             if (executeMethod == null || canExecuteMethod == null)
+            {
                 throw new ArgumentNullException("executeMethod");
+            }
         }
 
         /// <summary>
@@ -247,7 +251,9 @@ namespace WpfMasterPassword.Common
             : base((o) => executeMethod(), (o) => canExecuteMethod())
         {
             if (executeMethod == null || canExecuteMethod == null)
+            {
                 throw new ArgumentNullException("executeMethod");
+            }
         }
     }
 }

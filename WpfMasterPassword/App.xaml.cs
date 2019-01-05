@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace WpfMasterPassword
@@ -21,7 +16,7 @@ namespace WpfMasterPassword
             //  From a single specific UI dispatcher thread.
             Dispatcher.UnhandledException += Dispatcher_UnhandledException;
             //Application.DispatcherUnhandledException From the main UI dispatcher thread in your WPF application.
-//TaskScheduler.UnobservedTaskException from within each AppDomain that uses a task scheduler for asynchronous operations.
+            //TaskScheduler.UnobservedTaskException from within each AppDomain that uses a task scheduler for asynchronous operations.
         }
 
         private void Dispatcher_UnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

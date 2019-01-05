@@ -40,7 +40,10 @@ namespace WpfMasterPassword.Common
         /// </summary>
         public void Dispose()
         {
-            if (null == changeMonitors) return;
+            if (null == changeMonitors)
+            {
+                return;
+            }
 
             foreach (var item in changeMonitors)
             {
@@ -82,6 +85,7 @@ namespace WpfMasterPassword.Common
         }
 
         #region Implementation
+
         private void Add(IDisposable item)
         {
             if (null == changeMonitors)
@@ -177,7 +181,10 @@ namespace WpfMasterPassword.Common
 
             public void Dispose()
             {
-                if (null == monitoredItems) return; // already disposed
+                if (null == monitoredItems)
+                {
+                    return; // already disposed
+                }
 
                 collection.CollectionChanged -= Collection_CollectionChanged;
 
@@ -239,7 +246,10 @@ namespace WpfMasterPassword.Common
 
             public void Dispose()
             {
-                if (null == monitoredItems) return; // already disposed
+                if (null == monitoredItems)
+                {
+                    return; // already disposed
+                }
 
                 collection.CollectionChanged -= Collection_CollectionChanged;
 
@@ -251,6 +261,7 @@ namespace WpfMasterPassword.Common
                 monitoredItems = null;
             }
         }
-        #endregion
+
+        #endregion Implementation
     }
 }

@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WpfMasterPassword.Common
 {
@@ -19,7 +15,7 @@ namespace WpfMasterPassword.Common
         /// <param name="compare">decide if a source and a destination item "are equal" </param>
         /// <param name="factory">create item for destination list for a source item</param>
         /// <returns>removed items</returns>
-        internal static List<TDest> Sync<TSource, TDest>(IList<TDest> dest, IEnumerable<TSource> source, Func<TSource, TDest, bool> compare, 
+        internal static List<TDest> Sync<TSource, TDest>(IList<TDest> dest, IEnumerable<TSource> source, Func<TSource, TDest, bool> compare,
             Func<TSource, TDest> factory)
         {
             var removed = new List<TDest>();
@@ -53,8 +49,7 @@ namespace WpfMasterPassword.Common
                         }
 
                         if (!found)
-                        {   // no new item yet 
-
+                        {   // no new item yet
                             // ROOM FOR IMPROVEMENTS
                             // - try to find in later of dest to avoid reallocations, (optionally using the ObservableCollection.Move)
                             newItem = factory(sourceItem);

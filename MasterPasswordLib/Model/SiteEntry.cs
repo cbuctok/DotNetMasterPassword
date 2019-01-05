@@ -8,7 +8,7 @@ namespace MasterPassword.Model
     public class SiteEntry
     {
         /// <summary>
-        /// Name of the website or service. This is influencing the generated password. 
+        /// Name of the website or service. This is influencing the generated password.
         /// </summary>
         public string SiteName { get; set; }
 
@@ -23,9 +23,9 @@ namespace MasterPassword.Model
         public int Counter { get; set; }
 
         /// <summary>
-        /// Type of password. This is influencing the generated password. 
+        /// Type of password. This is influencing the generated password.
         /// </summary>
-        public PasswordType Type  { get; set; }
+        public PasswordType Type { get; set; }
 
         // optional, coming: login, URl, comment
 
@@ -67,6 +67,5 @@ namespace MasterPassword.Model
             Counter = counter;
             Type = type;
         }
-   }
+    }
 }
-

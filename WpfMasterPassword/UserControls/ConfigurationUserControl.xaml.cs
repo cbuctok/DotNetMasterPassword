@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using WpfMasterPassword.ViewModel;
 
 namespace WpfMasterPassword.UserControls
@@ -24,20 +12,28 @@ namespace WpfMasterPassword.UserControls
         // trick to reset password box
         public bool ResetPassword
         {
-            get { return (bool)GetValue(ResetPasswordProperty); }
-            set { SetValue(ResetPasswordProperty, value); }
+            get => (bool)GetValue(ResetPasswordProperty);
+            set => SetValue(ResetPasswordProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ResetPasswordProperty =
             DependencyProperty.Register("ResetPassword", typeof(bool), typeof(ConfigurationUserControl), new PropertyMetadata(false, ResetPasswordChangedCallback));
 
-        static void ResetPasswordChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void ResetPasswordChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = d as ConfigurationUserControl;
 
-            if (null == control) return;
-            if (!true.Equals(e.NewValue)) return;
+            if (null == control)
+            {
+                return;
+            }
+
+            if (!true.Equals(e.NewValue))
+            {
+                return;
+            }
+
             control.passwordBox.Clear();
         }
 
@@ -83,8 +79,6 @@ namespace WpfMasterPassword.UserControls
             site.Login.Value = "doe@john.org";
             site.TypeOfPassword.Value = MasterPassword.Core.PasswordType.MaximumSecurityPassword;
             Sites.Add(site);
-
         }
     }
-
 }

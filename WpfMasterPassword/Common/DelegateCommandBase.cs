@@ -17,8 +17,7 @@ namespace WpfMasterPassword.Common
     public abstract class DelegateCommandBase : ICommand
     {
         private bool _isActive;
-
-        readonly HashSet<string> _propertiesToObserve = new HashSet<string>();
+        private readonly HashSet<string> _propertiesToObserve = new HashSet<string>();
         private INotifyPropertyChanged _inpc;
 
         protected readonly Func<object, Task> _executeMethod;
@@ -32,7 +31,9 @@ namespace WpfMasterPassword.Common
         protected DelegateCommandBase(Action<object> executeMethod, Func<object, bool> canExecuteMethod)
         {
             if (executeMethod == null || canExecuteMethod == null)
+            {
                 throw new ArgumentNullException("executeMethod");
+            }
 
             _executeMethod = (arg) => { executeMethod(arg); return Task.Delay(0); };
             _canExecuteMethod = canExecuteMethod;
@@ -46,7 +47,9 @@ namespace WpfMasterPassword.Common
         protected DelegateCommandBase(Func<object, Task> executeMethod, Func<object, bool> canExecuteMethod)
         {
             if (executeMethod == null || canExecuteMethod == null)
+            {
                 throw new ArgumentNullException("executeMethod");
+            }
 
             _executeMethod = executeMethod;
             _canExecuteMethod = canExecuteMethod;
@@ -73,7 +76,7 @@ namespace WpfMasterPassword.Common
         private event EventHandler InternalCanExecuteChanged;
 
         /// <summary>
-        /// Raises <see cref="ICommand.CanExecuteChanged"/> on the UI thread so every 
+        /// Raises <see cref="ICommand.CanExecuteChanged"/> on the UI thread so every
         /// command invoker can requery <see cref="ICommand.CanExecute"/>.
         /// </summary>
         protected virtual void OnCanExecuteChanged()
@@ -152,7 +155,9 @@ namespace WpfMasterPassword.Common
         protected void HookInpc(MemberExpression expression)
         {
             if (expression == null)
+            {
                 return;
+            }
 
             if (_inpc == null)
             {
@@ -161,7 +166,9 @@ namespace WpfMasterPassword.Common
                 {
                     _inpc = constantExpression.Value as INotifyPropertyChanged;
                     if (_inpc != null)
+                    {
                         _inpc.PropertyChanged += Inpc_PropertyChanged;
+                    }
                 }
             }
         }
@@ -169,25 +176,30 @@ namespace WpfMasterPassword.Common
         protected void AddPropertyToObserve(string property)
         {
             if (_propertiesToObserve.Contains(property))
+            {
                 throw new ArgumentException(String.Format("{0} is already being observed.", property));
+            }
 
             _propertiesToObserve.Add(property);
         }
 
-        void Inpc_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Inpc_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (_propertiesToObserve.Contains(e.PropertyName))
+            {
                 RaiseCanExecuteChanged();
+            }
         }
 
         #region IsActive
+
         /// <summary>
         /// Gets or sets a value indicating whether the object is active.
         /// </summary>
         /// <value><see langword="true" /> if the object is active; otherwise <see langword="false" />.</value>
         public bool IsActive
         {
-            get { return _isActive; }
+            get => _isActive;
             set
             {
                 if (_isActive != value)
@@ -209,8 +221,12 @@ namespace WpfMasterPassword.Common
         protected virtual void OnIsActiveChanged()
         {
             EventHandler isActiveChangedHandler = IsActiveChanged;
-            if (isActiveChangedHandler != null) isActiveChangedHandler(this, EventArgs.Empty);
+            if (isActiveChangedHandler != null)
+            {
+                isActiveChangedHandler(this, EventArgs.Empty);
+            }
         }
-        #endregion
+
+        #endregion IsActive
     }
 }

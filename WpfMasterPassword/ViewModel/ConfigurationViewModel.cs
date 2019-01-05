@@ -1,13 +1,11 @@
 ﻿using MasterPassword.Core;
 using MasterPassword.Model;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Security;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using WpfMasterPassword.Common;
 using WpfMasterPassword.Dialogs;
@@ -18,6 +16,7 @@ namespace WpfMasterPassword.ViewModel
     {
         // Data
         public PropertyModel<string> UserName { get; private set; }
+
         public ObservableCollection<ConfigurationSiteViewModel> Sites { get; private set; }
 
         public PropertyModel<ConfigurationSiteViewModel> SelectedItem { get; private set; }
@@ -27,12 +26,13 @@ namespace WpfMasterPassword.ViewModel
         public PropertyReadonlyModel<string> GeneratedPassword { get; private set; }
 
         public PropertyModel<SecureString> CurrentMasterPassword { get; private set; }
-        public PropertyReadonlyModel<bool> ResetMasterPassword { get; private set; } // we set this to true to allow resetting 
+        public PropertyReadonlyModel<bool> ResetMasterPassword { get; private set; } // we set this to true to allow resetting
 
         public PropertyReadonlyModel<string> LastClipboardAction { get; private set; } // show what we did last time "copied login for ... to clipboard"
 
         // Commands
         public DelegateCommand Add { get; private set; }
+
         public DelegateCommand RemoveSelected { get; private set; }
 
         public DelegateCommand GeneratePassword { get; private set; }
@@ -62,7 +62,7 @@ namespace WpfMasterPassword.ViewModel
 
             // Commands
             Add = new DelegateCommand(() => PerformAdd());
-            RemoveSelected = new DelegateCommand(() => { if (CanRemove(SelectedItem.Value)) Sites.Remove(SelectedItem.Value); }, () => SelectedItem.Value != null);
+            RemoveSelected = new DelegateCommand(() => { if (CanRemove(SelectedItem.Value)) { Sites.Remove(SelectedItem.Value); } }, () => SelectedItem.Value != null);
             GeneratePassword = new DelegateCommand(DoGeneratePassword, () => CurrentMasterPassword.Value != null && SelectedItem.Value != null);
             CopyToClipBoard = new DelegateCommand(DoCopyPassToClipboard, () => !string.IsNullOrEmpty(GeneratedPassword.Value) && CurrentMasterPassword.Value != null);
             CopyLoginToClipBoard = new DelegateCommand(DoCopyLoginToClipboard, () => SelectedItem.Value != null);
@@ -327,7 +327,6 @@ namespace WpfMasterPassword.ViewModel
 
             // Notify Window to reset the entered passwd
             ResetMasterPassword.SetValue(true);
-
         }
     }
 }

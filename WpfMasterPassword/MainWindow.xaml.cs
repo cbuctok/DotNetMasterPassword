@@ -1,18 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using WpfMasterPassword.Common;
 using WpfMasterPassword.Properties;
 using WpfMasterPassword.ViewModel;
@@ -50,7 +38,7 @@ namespace WpfMasterPassword
             {
                 // suppress problem, don't interrupt the closing for that
                 Trace.WriteLine(ex.ToString());
-            }            
+            }
         }
 
         protected override void OnSourceInitialized(EventArgs e)

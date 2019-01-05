@@ -1,17 +1,12 @@
-﻿using MasterPassword.Model;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using WpfMasterPassword.Common;
-using System.ComponentModel;
-using WpfMasterPassword.Properties;
-using System.Diagnostics;
 using WpfMasterPassword.Dialogs;
+using WpfMasterPassword.Properties;
 
 namespace WpfMasterPassword.ViewModel
 {
@@ -31,8 +26,8 @@ namespace WpfMasterPassword.ViewModel
 
         public ConfigurationViewModel Config { get; private set; }
 
-        const string FileFilter = "MasterPassword file (*.xml)|*.xml|All files (*.*)|*.*";
-        const string FileNameNew = "<new>";
+        private const string FileFilter = "MasterPassword file (*.xml)|*.xml|All files (*.*)|*.*";
+        private const string FileNameNew = "<new>";
 
         public DocumentViewModel()
         {
@@ -107,7 +102,7 @@ namespace WpfMasterPassword.ViewModel
 
             // ask user
             var result = CustomMessageBox.ShowYesNoCancel(
-                "Do you want to save your current changes?", captionForQuestion, 
+                "Do you want to save your current changes?", captionForQuestion,
                 "Save", "Don't Save", "Cancel"
                 );
             if (result == MessageBoxResult.Yes)
@@ -125,7 +120,10 @@ namespace WpfMasterPassword.ViewModel
 
         private bool DoOpen()
         {
-            if (!CanDiscardOldData("Open new file")) return false;
+            if (!CanDiscardOldData("Open new file"))
+            {
+                return false;
+            }
 
             // ask for file name
             var dlg = new OpenFileDialog();
@@ -168,7 +166,6 @@ namespace WpfMasterPassword.ViewModel
             Config.DoMergeImport(newFileName);
         }
 
-
         private bool DoSave()
         {
             if (FilePathValid.Value)
@@ -185,7 +182,7 @@ namespace WpfMasterPassword.ViewModel
                 }
             }
             else
-            {   // no valid 
+            {   // no valid
                 return DoSaveAs();
             }
         }
@@ -231,7 +228,7 @@ namespace WpfMasterPassword.ViewModel
                 Config.SaveXml(file);
             }
 
-            // succeeded 
+            // succeeded
             FilePathName.SetValue(fileName);
             FilePathValid.SetValue(true);
             HasChanges.SetValue(false);
@@ -249,13 +246,13 @@ namespace WpfMasterPassword.ViewModel
                     Config.ReadXml(file);
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 Config.Reset();
                 throw;
             }
 
-            // succeeded 
+            // succeeded
             FilePathName.SetValue(fileName);
             FilePathValid.SetValue(true);
             HasChanges.SetValue(false);
@@ -263,7 +260,10 @@ namespace WpfMasterPassword.ViewModel
 
         private void DoNew()
         {
-            if (!CanDiscardOldData("Create New Configuration")) return;
+            if (!CanDiscardOldData("Create New Configuration"))
+            {
+                return;
+            }
 
             Config.Reset();
 

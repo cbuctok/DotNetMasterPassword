@@ -10,12 +10,12 @@ namespace ConsoleMasterPassword
     /// <summary>
     /// Console application for Master Password.
     /// </summary>
-    class Program
+    internal class Program
     {
         /// <summary>
         /// Main
         /// </summary>
-        static int Main(string[] args)
+        private static int Main(string[] args)
         {
             try
             {
@@ -150,7 +150,6 @@ namespace ConsoleMasterPassword
                         }
                     }
 
-
                     // read both files
                     var firstConfig = new Configuration();
                     using (var file = File.OpenRead(firstFile))
@@ -174,7 +173,7 @@ namespace ConsoleMasterPassword
                     catch (Exception ex)
                     {
                         Console.WriteLine("Merge failed.");
-                        Console.WriteLine(ex.Message);                        
+                        Console.WriteLine(ex.Message);
                         return 1;
                     }
 
@@ -253,15 +252,18 @@ namespace ConsoleMasterPassword
                                 case Merge.MergedEntry.Resolution.FirstNewer:
                                     merged.Sites.Add(new SiteEntry(item.First));
                                     break;
+
                                 case Merge.MergedEntry.Resolution.SecondNew:
                                 case Merge.MergedEntry.Resolution.SecondNewer:
                                     merged.Sites.Add(new SiteEntry(item.Second));
                                     break;
+
                                 case Merge.MergedEntry.Resolution.Conflict:
                                     // we include both
                                     merged.Sites.Add(new SiteEntry(item.First));
                                     merged.Sites.Add(new SiteEntry(item.Second));
                                     break;
+
                                 default:
                                     break;
                             }
@@ -271,7 +273,7 @@ namespace ConsoleMasterPassword
                         {
                             merged.Save(file);
                         }
-                        Console.WriteLine("Saved merged " + merged.Sites.Count + " entries to '" + saveHere + "'" + 
+                        Console.WriteLine("Saved merged " + merged.Sites.Count + " entries to '" + saveHere + "'" +
                             (conflicts.Count > 0 ? " including 2 x " + conflicts.Count + " entries for the conflicts" : "") + ".");
                     }
                     return 1;

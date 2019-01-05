@@ -11,7 +11,4 @@
 [assembly: AssemblyCopyright("Copyright © Martin Schmidt")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-
 [assembly: AssemblyVersion("1.02.00")]
-
-
