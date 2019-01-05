@@ -10,7 +10,7 @@ namespace ConsoleMasterPassword
     /// <summary>
     /// Console application for Master Password.
     /// </summary>
-    internal class Program
+    internal static class Program
     {
         /// <summary>
         /// Main
@@ -62,7 +62,7 @@ namespace ConsoleMasterPassword
             }
             Console.WriteLine("    -c  specify counter for this site, optional, default is 1");
             Console.WriteLine("    -p  specify masterpassword to derive the new password from");
-            Console.WriteLine("  -m  read two configuration files, merge them and print result");
+            Console.WriteLine("    -m  read two configuration files, merge them and print result");
             Console.WriteLine("    -o  save merged result into new file, both entries for conflicts");
         }
 
@@ -142,8 +142,8 @@ namespace ConsoleMasterPassword
                             return 1; // error
                         }
 
-                        if (string.Equals(saveHere, firstFile, StringComparison.InvariantCultureIgnoreCase) ||
-                            string.Equals(saveHere, secondFile, StringComparison.InvariantCultureIgnoreCase))
+                        if (string.Equals(saveHere, firstFile, StringComparison.InvariantCultureIgnoreCase)
+                            || string.Equals(saveHere, secondFile, StringComparison.InvariantCultureIgnoreCase))
                         {   // overwriting input files is not supported
                             Console.WriteLine("Not merging: overwriting the input files is not supported." + cmd.CurrentArg);
                             return 1; // error
@@ -181,7 +181,7 @@ namespace ConsoleMasterPassword
                     var identical = result.SitesMerged.Where(m => m.Which == Merge.MergedEntry.Resolution.Identical).ToList();
                     if (identical.Count > 0)
                     {
-                        Console.WriteLine("Same in both both configs: " + identical.Count + " entries");
+                        Console.WriteLine("Same in both configurations: " + identical.Count + " entries");
                         foreach (var item in identical)
                         {
                             Console.WriteLine("  site: " + item.First.SiteName + " (login='" + item.First.Login + "' c=" + item.First.Counter + " t=" + item.First.Type + ")");
@@ -233,12 +233,12 @@ namespace ConsoleMasterPassword
                         foreach (var item in conflicts)
                         {
                             Console.WriteLine("  site: " + item.First.SiteName);
-                            Console.WriteLine("   in 1st: login='" + item.First.Login + "' c=" + item.First.Counter + " t=" + item.First.Type + "");
-                            Console.WriteLine("   in 2nd: login='" + item.Second.Login + "' c=" + item.Second.Counter + " t=" + item.Second.Type + "");
+                            Console.WriteLine("   in 1st: login='" + item.First.Login + "' c=" + item.First.Counter + " t=" + item.First.Type + string.Empty);
+                            Console.WriteLine("   in 2nd: login='" + item.Second.Login + "' c=" + item.Second.Counter + " t=" + item.Second.Type + string.Empty);
                         }
                     }
 
-                    if (null != saveHere)
+                    if (saveHere != null)
                     {   // save
                         var merged = new Configuration();
 
@@ -274,7 +274,7 @@ namespace ConsoleMasterPassword
                             merged.Save(file);
                         }
                         Console.WriteLine("Saved merged " + merged.Sites.Count + " entries to '" + saveHere + "'" +
-                            (conflicts.Count > 0 ? " including 2 x " + conflicts.Count + " entries for the conflicts" : "") + ".");
+                            (conflicts.Count > 0 ? " including 2 x " + conflicts.Count + " entries for the conflicts" : string.Empty) + ".");
                     }
                     return 1;
                 }
@@ -331,7 +331,7 @@ namespace ConsoleMasterPassword
             string userName = null;
             string siteName = null;
             PasswordType? type = null;
-            int counter = 1;
+            var counter = 1;
             string masterPassword = null;
 
             if (!cmd.IsValid)
@@ -431,10 +431,8 @@ namespace ConsoleMasterPassword
         /// </summary>
         private static PasswordType ExtractTypeFromString(PasswordType[] types, string typeAsString)
         {
-            int index;
-
             // try index
-            if (int.TryParse(typeAsString, out index))
+            if (int.TryParse(typeAsString, out int index))
             {   // is a number
                 return types[index];
             }
@@ -442,7 +440,7 @@ namespace ConsoleMasterPassword
             // try to find best match
             foreach (var type in types)
             {
-                if (type.ToString().ToLowerInvariant().Contains(typeAsString.ToLowerInvariant()))
+                if (type.ToString().IndexOf(typeAsString, StringComparison.InvariantCultureIgnoreCase) >= 0)
                 {   // match, OK
                     return type;
                 }
@@ -504,10 +502,9 @@ namespace ConsoleMasterPassword
                         pass.Pop();
                     }
                 }
-                else if (FILTERED.Count(x => chr == x) > 0) { }
-                else
+                else if (!FILTERED.Any(x => chr == x))
                 {
-                    pass.Push((char)chr);
+                    pass.Push(chr);
                     Console.Write(mask);
                 }
             }

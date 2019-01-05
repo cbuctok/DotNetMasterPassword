@@ -9,36 +9,36 @@ using System.Xml.Serialization;
 
 namespace WpfMasterPassword.Common
 {
-    // from http://blogs.msdn.com/b/davidrickard/archive/2010/03/09/saving-window-size-and-location-in-wpf-and-winforms.aspx
-    //
-    // load and restore position and size of window
-    //
-    // Usage:
-    // To save the window placement, just handle the Closing event on the Window:
-    //    private void Window_Closing(object sender, CancelEventArgs e)
-    //    {
-    //        Settings.Default.MainWindowPlacement = this.GetPlacement();
-    //        Settings.Default.Save();
-    //    }
-    //
-    // To restore, you’ll need to hook in on SourceInitialized:
-    //    protected override void OnSourceInitialized(EventArgs e)
-    //    {
-    //        base.OnSourceInitialized(e);
-    //        this.SetPlacement(Settings.Default.MainWindowPlacement);
-    //    }
+    //// from http://blogs.msdn.com/b/davidrickard/archive/2010/03/09/saving-window-size-and-location-in-wpf-and-winforms.aspx
+    ////
+    //// load and restore position and size of window
+    ////
+    //// Usage:
+    //// To save the window placement, just handle the Closing event on the Window:
+    ////    private void Window_Closing(object sender, CancelEventArgs e)
+    ////    {
+    ////        Settings.Default.MainWindowPlacement = this.GetPlacement();
+    ////        Settings.Default.Save();
+    ////    }
+    ////
+    //// To restore, you’ll need to hook in on SourceInitialized:
+    ////    protected override void OnSourceInitialized(EventArgs e)
+    ////    {
+    ////        base.OnSourceInitialized(e);
+    ////        this.SetPlacement(Settings.Default.MainWindowPlacement);
+    ////    }
 
     // RECT structure required by WINDOWPLACEMENT structure
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
-    public struct RECT
+    public struct Rectangle
     {
         public int Left;
         public int Top;
         public int Right;
         public int Bottom;
 
-        public RECT(int left, int top, int right, int bottom)
+        public Rectangle(int left, int top, int right, int bottom)
         {
             this.Left = left;
             this.Top = top;
@@ -50,12 +50,12 @@ namespace WpfMasterPassword.Common
     // POINT structure required by WINDOWPLACEMENT structure
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
-    public struct POINT
+    public struct Point
     {
         public int X;
         public int Y;
 
-        public POINT(int x, int y)
+        public Point(int x, int y)
         {
             this.X = x;
             this.Y = y;
@@ -70,9 +70,9 @@ namespace WpfMasterPassword.Common
         public int length;
         public int flags;
         public int showCmd;
-        public POINT minPosition;
-        public POINT maxPosition;
-        public RECT normalPosition;
+        public Point minPosition;
+        public Point maxPosition;
+        public Rectangle normalPosition;
     }
 
     public static class WindowPlacement
@@ -119,7 +119,7 @@ namespace WpfMasterPassword.Common
 
         public static string GetPlacement(IntPtr windowHandle)
         {
-            WINDOWPLACEMENT placement = new WINDOWPLACEMENT();
+            WINDOWPLACEMENT placement = default(WINDOWPLACEMENT);
             GetWindowPlacement(windowHandle, out placement);
 
             using (MemoryStream memoryStream = new MemoryStream())

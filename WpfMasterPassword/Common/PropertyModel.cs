@@ -13,7 +13,7 @@ namespace WpfMasterPassword.Common
             set
             {
                 _Value = value;
-                OnPropertyChanged("Value");
+                OnPropertyChanged(nameof(Value));
             }
         }
 
@@ -50,8 +50,8 @@ namespace WpfMasterPassword.Common
 
     public class PropertyDelegateModel<T> : BindableBase
     {
-        private Func<T> GetValue;
-        private Action<T> SetValue;
+        private readonly Func<T> GetValue;
+        private readonly Action<T> SetValue;
 
         public T Value
         {
@@ -65,18 +65,8 @@ namespace WpfMasterPassword.Common
 
         public PropertyDelegateModel(Func<T> getValue, Action<T> setValue)
         {
-            if (null == getValue)
-            {
-                throw new ArgumentException("getValue");
-            }
-
-            if (null == setValue)
-            {
-                throw new ArgumentException("setValue");
-            }
-
-            GetValue = getValue;
-            SetValue = setValue;
+            GetValue = getValue ?? throw new ArgumentException("getValue");
+            SetValue = setValue ?? throw new ArgumentException("setValue");
         }
 
         public void RaiseOnPropertyChanged()
@@ -87,7 +77,7 @@ namespace WpfMasterPassword.Common
 
     public class PropertyDelegateReadonlyModel<T> : BindableBase
     {
-        private Func<T> GetValue;
+        private readonly Func<T> GetValue;
         public T Value => GetValue();
 
         public PropertyDelegateReadonlyModel(Func<T> getValue)

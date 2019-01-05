@@ -40,7 +40,7 @@ namespace WpfMasterPassword.Common
         /// </summary>
         public void Dispose()
         {
-            if (null == changeMonitors)
+            if (changeMonitors == null)
             {
                 return;
             }
@@ -88,17 +88,13 @@ namespace WpfMasterPassword.Common
 
         private void Add(IDisposable item)
         {
-            if (null == changeMonitors)
-            {
-                changeMonitors = new List<IDisposable>();
-            }
-            changeMonitors.Add(item);
+            (changeMonitors ?? (changeMonitors = new List<IDisposable>())).Add(item);
         }
 
         private class MonitorINotifyPropertyChanged : IDisposable
         {
-            private GenericChangeDetection parent;
-            private INotifyPropertyChanged item;
+            private readonly GenericChangeDetection parent;
+            private readonly INotifyPropertyChanged item;
 
             public MonitorINotifyPropertyChanged(GenericChangeDetection parent, INotifyPropertyChanged item)
             {
@@ -121,8 +117,8 @@ namespace WpfMasterPassword.Common
 
         private class MonitorIDetectChanges : IDisposable
         {
-            private GenericChangeDetection parent;
-            private IDetectChanges item;
+            private readonly GenericChangeDetection parent;
+            private readonly IDetectChanges item;
 
             public MonitorIDetectChanges(GenericChangeDetection parent, IDetectChanges item)
             {
@@ -140,9 +136,9 @@ namespace WpfMasterPassword.Common
 
         private class MonitorCollectionOfIDetectChanges<T> : IDisposable where T : class
         {
-            private ObservableCollection<T> collection;
-            private GenericChangeDetection parent;
-            private Func<T, IDetectChanges> selectWhatToMonitor;
+            private readonly ObservableCollection<T> collection;
+            private readonly GenericChangeDetection parent;
+            private readonly Func<T, IDetectChanges> selectWhatToMonitor;
 
             private List<Tuple<T, IDetectChanges>> monitoredItems = new List<Tuple<T, IDetectChanges>>();
 
@@ -165,11 +161,9 @@ namespace WpfMasterPassword.Common
 
             private void Sync()
             {
-                var removed = SynchronizeLists.Sync(monitoredItems, collection, (item, tuple) => tuple.Item1 == item, AddItem);
-                foreach (var item in removed)
-                {
-                    item.Item2.DataChanged -= parent.OnDataChanged;
-                }
+                SynchronizeLists
+                    .Sync(monitoredItems, collection, (item, tuple) => tuple.Item1 == item, AddItem)
+                    .ForEach(item => item.Item2.DataChanged -= parent.OnDataChanged);
             }
 
             private Tuple<T, IDetectChanges> AddItem(T item)
@@ -181,7 +175,7 @@ namespace WpfMasterPassword.Common
 
             public void Dispose()
             {
-                if (null == monitoredItems)
+                if (monitoredItems == null)
                 {
                     return; // already disposed
                 }
@@ -199,9 +193,9 @@ namespace WpfMasterPassword.Common
 
         private class MonitorCollectionOfINotifyPropertyChanged<T> : IDisposable where T : class
         {
-            private GenericChangeDetection parent;
-            private ObservableCollection<T> collection;
-            private Func<T, INotifyPropertyChanged> selectWhatToMonitor;
+            private readonly GenericChangeDetection parent;
+            private readonly ObservableCollection<T> collection;
+            private readonly Func<T, INotifyPropertyChanged> selectWhatToMonitor;
 
             private List<Tuple<T, INotifyPropertyChanged>> monitoredItems = new List<Tuple<T, INotifyPropertyChanged>>();
 
@@ -222,12 +216,9 @@ namespace WpfMasterPassword.Common
 
             private void Sync()
             {
-                var removed = SynchronizeLists.Sync(monitoredItems, collection, (item, tuple) => tuple.Item1 == item, AddItem);
-
-                foreach (var item in removed)
-                {
-                    item.Item2.PropertyChanged -= CheckThis_PropertyChanged;
-                }
+                SynchronizeLists
+                    .Sync(monitoredItems, collection, (item, tuple) => tuple.Item1 == item, AddItem)
+                    .ForEach(item => item.Item2.PropertyChanged -= CheckThis_PropertyChanged);
             }
 
             private Tuple<T, INotifyPropertyChanged> AddItem(T item)
@@ -246,7 +237,7 @@ namespace WpfMasterPassword.Common
 
             public void Dispose()
             {
-                if (null == monitoredItems)
+                if (monitoredItems == null)
                 {
                     return; // already disposed
                 }

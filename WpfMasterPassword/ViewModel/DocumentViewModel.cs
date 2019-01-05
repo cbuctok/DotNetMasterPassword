@@ -31,7 +31,7 @@ namespace WpfMasterPassword.ViewModel
 
         public DocumentViewModel()
         {
-            WindowTitle = new PropertyDelegateReadonlyModel<string>(() => ".NET Master Password - " + FilePathName.Value + " " + (HasChanges.Value ? "*" : ""));
+            WindowTitle = new PropertyDelegateReadonlyModel<string>(() => ".NET Master Password - " + FilePathName.Value + " " + (HasChanges.Value ? "*" : string.Empty));
             HasChanges = new PropertyReadonlyModel<bool>();
             FilePathValid = new PropertyReadonlyModel<bool>();
             FilePathName = new PropertyReadonlyModel<string>(FileNameNew);
