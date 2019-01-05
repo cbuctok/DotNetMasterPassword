@@ -339,6 +339,7 @@ namespace ConsoleMasterPassword
             else
             {
                 userName = cmd.CurrentArg;
+                cmd.Next();
             }
 
             while (cmd.IsValid)
