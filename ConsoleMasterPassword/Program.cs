@@ -39,31 +39,33 @@ namespace ConsoleMasterPassword
 
         private static void PrintHelp()
         {
-            Console.WriteLine(".NET Master Password Console");
-            Console.WriteLine("Generate derived passwords from a master password for a website.");
-            Console.WriteLine("Usage:");
-            Console.WriteLine("  ConsoleMasterPassword -i");
-            Console.WriteLine("  ConsoleMasterPassword -u user -s sitename -t type -c counter -p password");
-            Console.WriteLine("  ConsoleMasterPassword -m cfg.xml cfg2.xml -o cfg3.xml");
-            Console.WriteLine("Example:");
-            Console.WriteLine("  ConsoleMasterPassword -u \"John Doe\" -s \"ebay.com\" - t long -c 1 -p \"a pwd\"");
-            Console.WriteLine("Commands:");
-            Console.WriteLine("  -?  help");
-            Console.WriteLine("  -i  use interactive mode to enter all data for one password");
-            Console.WriteLine("  -u  all properties to generate a password as options");
-            Console.WriteLine("    -u  specify user name");
-            Console.WriteLine("    -s  specify site name");
-            Console.WriteLine("    -t  specify type of password as an index value");
-            Console.WriteLine("        Available types of passwords:");
-            var types = GetPasswordTypes();
-            for (int i = 0; i < types.Length; i++)
-            {
-                Console.WriteLine("        " + i + "=" + types[i].ToString());
-            }
-            Console.WriteLine("    -c  specify counter for this site, optional, default is 1");
-            Console.WriteLine("    -p  specify masterpassword to derive the new password from");
-            Console.WriteLine("    -m  read two configuration files, merge them and print result");
-            Console.WriteLine("    -o  save merged result into new file, both entries for conflicts");
+            var help = $@"
+.NET Master Password Console
+Generate derived passwords from a master password for a website.
+Usage:
+  ConsoleMasterPassword -i
+  ConsoleMasterPassword -u user -s website -t type -c counter -p password
+  ConsoleMasterPassword -m cfg.xml cfg2.xml -o cfg3.xml
+Example:
+  ConsoleMasterPassword -u 'John Doe' -s 'ebay.com' -t long -c 1 -p 'password'
+Commands:
+  -?  help
+  -i  use interactive mode to enter all data for one password
+  -u  all properties to generate a password as options
+    -u  specify user name
+    -s  specify site name
+    -t  specify type of password as an index value
+        Available types of passwords:
+          {string.Join("\n\t  ",
+                GetPasswordTypes()
+                    .Select((passType, i) => $"{i}={passType}")
+                    .ToArray())}
+    -c  specify counter for this site, optional, default is 1
+    -p  specify masterpassword to derive the new password from
+    -m  read two configuration files, merge them and print result
+    -o  save merged result into new file, both entries for conflicts";
+
+            Console.Write(help);
         }
 
         private static int ParseCommands(string[] args)
