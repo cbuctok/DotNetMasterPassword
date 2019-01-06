@@ -58,8 +58,7 @@ Commands:
         Available types of passwords:
           {string.Join("\n\t  ",
                 GetPasswordTypes()
-                    .Select((passType, i) => $"{i}={passType}")
-                    .ToArray())}
+                    .Select((passType, i) => $"{i}={passType}"))}
     -c  specify counter for this site, optional, default is 1
     -p  specify masterpassword to derive the new password from
     -m  read two configuration files, merge them and print result
