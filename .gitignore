@@ -16,3 +16,6 @@
 MonoMacMasterPassword.userprefs
 MonoMasterPasswordLib/bin
 MonoMasterPasswordLib/obj
+/ConsoleMasterPassword/ConsoleMasterPassword_TemporaryKey.pfx
+/ConsoleMasterPasswordSetup/Release
+/UpgradeLog.htm
