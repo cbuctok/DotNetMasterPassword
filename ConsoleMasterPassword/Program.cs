@@ -92,13 +92,9 @@ namespace ConsoleMasterPassword
             var generatedPassword = Algorithm.CalcPassword(templateSeed, type);
 
             if (toClipboard)
-            {
                 WriteToClipboard(generatedPassword);
-            }
             else
-            {
                 Console.WriteLine(generatedPassword);
-            }
         }
 
         /// <summary>
@@ -148,21 +144,17 @@ namespace ConsoleMasterPassword
         {
             try
             {
-                if (args.Length == 0)
-                {   // no args - print help
+                if (args.Length == 0) // no args - print help
                     PrintHelp();
-                    return 0; // do not continue
-                }
                 else
-                {
                     return ParseCommands(args);
-                }
+                return 0; // do not continue
             }
             catch (Exception ex)
             {
                 Console.WriteLine();
                 Console.WriteLine("Program stops, error detected:  " + ex.Message);
-                return 1;
+                throw;
             }
         }
 
