@@ -85,16 +85,11 @@ namespace ConsoleMasterPassword
         /// <summary>
         /// main algorithm: generate the site specific password
         /// </summary>
-        private static void GeneratePassword(string userName, string siteName, PasswordType type, int counter, string masterPassword, bool toClipboard = false)
+        private static string GeneratePassword(string userName, string siteName, PasswordType type, int counter, string masterPassword, bool toClipboard = false)
         {
             var masterkey = Algorithm.CalcMasterKey(userName, masterPassword);
             var templateSeed = Algorithm.CalcTemplateSeed(masterkey, siteName, counter);
-            var generatedPassword = Algorithm.CalcPassword(templateSeed, type);
-
-            if (toClipboard)
-                WriteToClipboard(generatedPassword);
-            else
-                Console.WriteLine(generatedPassword);
+            return Algorithm.CalcPassword(templateSeed, type);
         }
 
         /// <summary>
@@ -134,7 +129,9 @@ namespace ConsoleMasterPassword
             // perform
             Console.WriteLine("Generating password ...");
 
-            GeneratePassword(userName, siteName, type, counter, masterPassword);
+            var generatedPassword = GeneratePassword(userName, siteName, type, counter, masterPassword);
+
+            Console.WriteLine(generatedPassword);
         }
 
         /// <summary>
@@ -256,13 +253,15 @@ namespace ConsoleMasterPassword
             }
 
             // OK?
-            if (!ok)
-            {   // configuration not OK
+            if (!ok)    // configuration not OK
                 return 1;
-            }
 
             // perform actual generation
-            GeneratePassword(userName, siteName, type.Value, counter, masterPassword, toClipboard);
+            var generatedPassword = GeneratePassword(userName, siteName, type.Value, counter, masterPassword);
+            if (toClipboard)
+                WriteToClipboard(generatedPassword);
+            else
+                Console.WriteLine(generatedPassword);
             return 0;
         }
 
@@ -357,14 +356,10 @@ namespace ConsoleMasterPassword
                             // read both files
                             var firstConfig = new Configuration();
                             using (var file = File.OpenRead(firstFile))
-                            {
                                 firstConfig.Load(file);
-                            }
                             var secondConfig = new Configuration();
                             using (var file = File.OpenRead(secondFile))
-                            {
                                 secondConfig.Load(file);
-                            }
 
                             Console.WriteLine("Found entries: " + firstConfig.Sites.Count + " sites in 1st, " + secondConfig.Sites.Count + " sites in 2nd");
 
@@ -378,7 +373,7 @@ namespace ConsoleMasterPassword
                             {
                                 Console.WriteLine("Merge failed.");
                                 Console.WriteLine(ex.Message);
-                                return 1;
+                                throw;
                             }
 
                             // print result
@@ -387,9 +382,7 @@ namespace ConsoleMasterPassword
                             {
                                 Console.WriteLine("Same in both configurations: " + identical.Count + " entries");
                                 foreach (var item in identical)
-                                {
                                     Console.WriteLine("  site: " + item.First.SiteName + " (login='" + item.First.Login + "' c=" + item.First.Counter + " t=" + item.First.Type + ")");
-                                }
                             }
 
                             // Display overview
@@ -398,18 +391,14 @@ namespace ConsoleMasterPassword
                             {
                                 Console.WriteLine("New in 1st (not found in 2nd): " + firstNew.Count + " entries");
                                 foreach (var item in firstNew)
-                                {
                                     Console.WriteLine("  site: " + item.First.SiteName + " (login='" + item.First.Login + "' c=" + item.First.Counter + " t=" + item.First.Type + ")");
-                                }
                             }
                             var firstNewer = result.SitesMerged.Where(m => m.Which == Merge.MergedEntry.Resolution.FirstNewer).ToList();
                             if (firstNewer.Count > 0)
                             {
                                 Console.WriteLine("Newer in 1st (also found in 2nd but older): " + firstNewer.Count + " entries");
                                 foreach (var item in firstNewer)
-                                {
                                     Console.WriteLine("  site: " + item.First.SiteName + " (login='" + item.First.Login + "' c=" + item.First.Counter + " t=" + item.First.Type + ")");
-                                }
                             }
 
                             var secondNew = result.SitesMerged.Where(m => m.Which == Merge.MergedEntry.Resolution.SecondNew).ToList();
@@ -417,18 +406,14 @@ namespace ConsoleMasterPassword
                             {
                                 Console.WriteLine("New in 2nd (not found in 1st): " + secondNew.Count + " entries");
                                 foreach (var item in secondNew)
-                                {
                                     Console.WriteLine("  site: " + item.Second.SiteName + " (login='" + item.Second.Login + "' c=" + item.Second.Counter + " t=" + item.Second.Type + ")");
-                                }
                             }
                             var secondNewer = result.SitesMerged.Where(m => m.Which == Merge.MergedEntry.Resolution.SecondNewer).ToList();
                             if (secondNewer.Count > 0)
                             {
                                 Console.WriteLine("Newer in 2nd (also found in 1st but older): " + secondNewer.Count + " entries");
                                 foreach (var item in secondNewer)
-                                {
                                     Console.WriteLine("  site: " + item.Second.SiteName + " (login='" + item.Second.Login + "' c=" + item.Second.Counter + " t=" + item.Second.Type + ")");
-                                }
                             }
                             var conflicts = result.SitesMerged.Where(m => m.Which == Merge.MergedEntry.Resolution.Conflict).ToList();
                             if (conflicts.Count > 0)
@@ -467,9 +452,6 @@ namespace ConsoleMasterPassword
                                             merged.Sites.Add(new SiteEntry(item.First));
                                             merged.Sites.Add(new SiteEntry(item.Second));
                                             break;
-
-                                        default:
-                                            break;
                                     }
                                 }
 
@@ -495,6 +477,13 @@ namespace ConsoleMasterPassword
             PrintHelp();
 
             return 1; // error
+        }
+
+        private static int Print(string text, int stringLength)
+        {
+            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.Write(text + new string(' ', stringLength - text.Length));
+            return text.Length;
         }
 
         private static void PrintHelp()
@@ -525,11 +514,28 @@ Commands:
             Console.Write(help);
         }
 
-        private static void WriteToClipboard(string generatedPassword)
+        private static void SetClipboard(string clipboardText)
         {
-            var t = new Thread(() => Clipboard.SetText(generatedPassword));
+            var t = string.IsNullOrWhiteSpace(clipboardText)
+                ? new Thread(Clipboard.Clear)
+                : new Thread(() => Clipboard.SetText(clipboardText));
             t.SetApartmentState(ApartmentState.STA);
             t.Start();
+        }
+
+        private static void WriteToClipboard(string generatedPassword)
+        {
+            var secondsToWait = 12;
+            var stringLength = 100;
+            SetClipboard(generatedPassword);
+            for (; secondsToWait != 0; secondsToWait--)
+            {
+                Thread.Sleep(TimeSpan.FromSeconds(1));
+                stringLength = Print($"Password is copied. Clipboard will be cleared in {secondsToWait} seconds", stringLength);
+            }
+
+            SetClipboard(string.Empty);
+            Print("Clipboard is clear", stringLength);
         }
     }
 }
