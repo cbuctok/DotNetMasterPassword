@@ -93,9 +93,7 @@ namespace ConsoleMasterPassword
 
             if (toClipboard)
             {
-                var t = new Thread((ThreadStart)(() => Clipboard.SetText(generatedPassword)));
-                t.SetApartmentState(ApartmentState.STA);
-                t.Start();
+                WriteToClipboard(generatedPassword);
             }
             else
             {
@@ -533,6 +531,13 @@ Commands:
     -o  save merged result into new file, both entries for conflicts";
 
             Console.Write(help);
+        }
+
+        private static void WriteToClipboard(string generatedPassword)
+        {
+            var t = new Thread(() => Clipboard.SetText(generatedPassword));
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
         }
     }
 }
